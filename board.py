@@ -9,11 +9,36 @@ class Tile():
         self.width = 80
         self.height = 80
 
+        self.rect = (self.x, self.y, self.width, self.height)
+
+        self.active = False
+
     def draw(self, surface):
-        pygame.draw.rect(surface, color.white, (self.x, self.y, self.width, self.height))
+        pygame.draw.rect(surface, color.white, self.rect)
+
+        if self.active:
+            pygame.draw.rect(surface, color.green, self.rect)
+
+        if self.check_hover():
+            pygame.draw.rect(surface, color.blue, self.rect)
 
     def update(self):
-        pass
+        if pygame.mouse.get_pressed()[0]:
+            if self.check_hover():
+                self.active = True
+            else:
+                self.active = False
+
+    def check_hover(self):
+        mouse_pos = pygame.mouse.get_pos()
+
+        if self.x <= mouse_pos[0] <= self.x + self.width:
+            if self.y <= mouse_pos[1] <= self.y + self.height:
+                return True
+            else:
+                return False
+        else:
+            return False
 
 # The Region class controls a 3*3 "region" of Tiles.
 class Region():
